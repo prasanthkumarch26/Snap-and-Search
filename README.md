@@ -59,7 +59,7 @@ Process Selection
 Present Results
 ```
 
-No additional dialogs.
+No unnecessary dialogs.
 
 No manual uploads.
 
@@ -67,28 +67,27 @@ No interruption to your workflow.
 
 ---
 
-## 🚀 Planned Features
+## 🚀 Features
 
-### Core
+### Current Focus
 
 - Native fullscreen selection overlay
 - Global keyboard shortcuts
-- Rectangle, Window and Fullscreen selection
-- Instant visual search
+- Rectangle region selection
+- Instant image search
 - Search history
-- System tray integration
+- System tray application
 - Configurable settings
 
-### Future
+### Planned
 
-- OCR (Copy Text)
-- AI-powered visual understanding
+- OCR (Extract Text)
+- AI Explain
 - Translation
-- QR & Barcode scanning
-- Color picker
-- Product lookup
-- Plugin system
-- Multiple search providers
+- Product Lookup
+- QR & Barcode Detection
+- Code Search
+- Plugin Architecture
 
 ---
 
