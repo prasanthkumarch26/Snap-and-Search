@@ -1,0 +1,1 @@
+D:\career\coding\github\snap-and-search\target\debug\service.exe: D:\career\coding\github\snap-and-search\crates\win-api\src\hotkey.rs D:\career\coding\github\snap-and-search\crates\win-api\src\lib.rs D:\career\coding\github\snap-and-search\service\src\main.rs
