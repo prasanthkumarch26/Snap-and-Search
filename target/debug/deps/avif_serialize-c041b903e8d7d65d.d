@@ -1,0 +1,10 @@
+D:\career\coding\github\snap-and-search\target\debug\deps\avif_serialize-c041b903e8d7d65d.d: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\boxes.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\constants.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\writer.rs
+
+D:\career\coding\github\snap-and-search\target\debug\deps\libavif_serialize-c041b903e8d7d65d.rlib: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\boxes.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\constants.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\writer.rs
+
+D:\career\coding\github\snap-and-search\target\debug\deps\libavif_serialize-c041b903e8d7d65d.rmeta: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\boxes.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\constants.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\writer.rs
+
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\lib.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\boxes.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\constants.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avif-serialize-0.8.9\src\writer.rs:

@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+capture = { version = "0.1.0", path = "../crates/capture" }
 overlay = { version = "0.1.0", path = "../crates/overlay" }
 win-api = { version = "0.1.0", path = "../crates/win-api" }

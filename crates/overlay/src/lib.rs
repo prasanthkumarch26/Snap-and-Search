@@ -1,14 +1,13 @@
-use win_api::window::OverlayWindow;
+use win_api::window::{OverlayWindow, SelectionRect};
 
 pub struct Overlay {
     window: OverlayWindow,
 }
 
 impl Overlay {
-    pub fn new() -> Result<Self, String> {
-        let window = OverlayWindow::new()
+    pub fn new(on_capture: impl Fn(SelectionRect) + Send + 'static) -> Result<Self, String> {
+        let window = OverlayWindow::new(on_capture)
             .map_err(|e| format!("Failed to create overlay window: {}", e))?;
-            
         Ok(Self { window })
     }
 

@@ -1,0 +1,9 @@
+D:\career\coding\github\snap-and-search\target\debug\deps\pastey-ee7a3b6a10ca93f8.d: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\attr.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\error.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\segment.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\../README.md
+
+D:\career\coding\github\snap-and-search\target\debug\deps\pastey-ee7a3b6a10ca93f8.dll: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\attr.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\error.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\segment.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\../README.md
+
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\lib.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\attr.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\error.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\segment.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\pastey-0.1.1\src\../README.md:

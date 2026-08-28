@@ -1,0 +1,10 @@
+D:\career\coding\github\snap-and-search\target\debug\deps\built-ce6ba022f6d85bd6.d: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\environment.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\util.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\../README.md
+
+D:\career\coding\github\snap-and-search\target\debug\deps\libbuilt-ce6ba022f6d85bd6.rlib: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\environment.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\util.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\../README.md
+
+D:\career\coding\github\snap-and-search\target\debug\deps\libbuilt-ce6ba022f6d85bd6.rmeta: C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\lib.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\environment.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\util.rs C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\../README.md
+
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\lib.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\environment.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\util.rs:
+C:\Users\Ch\ Prasanth\ kumar\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\built-0.8.1\src\../README.md:
