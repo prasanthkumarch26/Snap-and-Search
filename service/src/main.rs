@@ -1,7 +1,18 @@
+use overlay::Overlay;
 use win_api::hotkey::{HotkeyManager, HotkeyModifiers};
 
 fn main() {
     println!("Starting Screen Intelligence Background Service...");
+
+    // Create the native transparent overlay
+    let overlay = match Overlay::new() {
+        Ok(o) => o,
+        Err(e) => {
+            eprintln!("Failed to initialize overlay: {}", e);
+            return;
+        }
+    };
+    println!("Overlay created successfully.");
 
     // Create a HotkeyManager with a unique ID for our global shortcut
     let hotkey_manager = HotkeyManager::new(1);
@@ -25,6 +36,7 @@ fn main() {
     
     // The listen function blocks and processes Windows messages
     hotkey_manager.listen(|| {
-        println!("Hotkey pressed! (Placeholder: Triggering Selection Engine...)");
+        println!("Hotkey pressed! Showing overlay...");
+        overlay.show();
     });
 }

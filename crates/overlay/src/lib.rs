@@ -1,14 +1,22 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+use win_api::window::OverlayWindow;
+
+pub struct Overlay {
+    window: OverlayWindow,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+impl Overlay {
+    pub fn new() -> Result<Self, String> {
+        let window = OverlayWindow::new()
+            .map_err(|e| format!("Failed to create overlay window: {}", e))?;
+            
+        Ok(Self { window })
+    }
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    pub fn show(&self) {
+        self.window.show();
+    }
+
+    pub fn hide(&self) {
+        self.window.hide();
     }
 }

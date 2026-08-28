@@ -2462,6 +2462,9 @@ dependencies = [
 [[package]]
 name = "overlay"
 version = "0.1.0"
+dependencies = [
+ "win-api",
+]
 
 [[package]]
 name = "pango"
@@ -3176,6 +3179,7 @@ dependencies = [
 name = "service"
 version = "0.1.0"
 dependencies = [
+ "overlay",
  "win-api",
 ]
 
