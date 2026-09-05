@@ -5,5 +5,8 @@ edition = "2024"
 
 [dependencies]
 capture = { version = "0.1.0", path = "../crates/capture" }
+chrono = { version = "0.4.45", features = ["clock"] }
+google-lens = { version = "0.1.0", path = "../plugins/google-lens" }
 overlay = { version = "0.1.0", path = "../crates/overlay" }
+settings = { version = "0.1.0", path = "../crates/settings" }
 win-api = { version = "0.1.0", path = "../crates/win-api" }

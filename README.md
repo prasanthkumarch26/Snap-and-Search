@@ -1,154 +1,163 @@
-# Snap & Search
+# Snap and Search
 
-> **Snap anything. Search instantly.**
+> **Instant screen capture + Google Lens search — the way Windows should have worked.**
 
-A Windows-native visual search application that lets you select any region of your screen and instantly search it on the web.
-
-Inspired by the seamless interaction of modern visual search experiences, Snap & Search brings a fast, keyboard-driven workflow to Windows with a polished native overlay.
-
----
-
-## ✨ Overview
-
-Searching something on your screen shouldn't require taking a screenshot, opening a browser, uploading an image, and waiting for results.
-
-Snap & Search makes visual search feel like a built-in Windows feature.
-
-Simply:
-
-1. Press a keyboard shortcut.
-2. Select any region on your screen.
-3. Search instantly.
-
-Whether it's an image, UI element, product, diagram, code snippet, or anything else visible on your display, Snap & Search lets you find relevant information in seconds.
+[![Release](https://img.shields.io/github/v/release/prasanthkumarch26/Snap-and-Search?label=Download&logo=windows&style=for-the-badge)](https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Built with Rust](https://img.shields.io/badge/Built%20with-Rust-orange?style=for-the-badge&logo=rust)](https://www.rust-lang.org/)
 
 ---
 
-## 🎯 Vision
+## What is it?
 
-Snap & Search is built around one simple idea:
+**Snap and Search** is a lightweight native Windows utility that lets you instantly search anything on your screen using Google Lens — or save it as a lossless PNG — with a single keyboard shortcut.
 
-> **Everything visible on your screen should be instantly actionable.**
-
-The project focuses on creating a native Windows experience that feels familiar from the very first use. Instead of introducing a new workflow, Snap & Search embraces the interaction patterns Windows users already know while extending them with powerful visual search capabilities.
-
-Image Search is only the beginning. The long-term vision is to build a modular screen intelligence platform capable of understanding and interacting with any selected region on the screen.
+No browser extension. No Electron. No overhead. Just **Ctrl+Shift+S → draw → done**.
 
 ---
 
-## 🖥️ User Experience
+## Features
 
-The experience is intentionally designed to feel like a natural extension of Windows.
+- ⚡ **Native Win32** — zero UI framework overhead; starts in milliseconds
+- 🖼️ **Snipping Tool-style** selection — dark overlay, crosshair, rectangle draw
+- 🔍 **Google Lens search** — uploads your selection and opens results instantly
+- 💾 **Save as PNG** — lossless screenshots saved as `Screenshot_YYYY-MM-DD_001.png`
+- 🔔 **System tray** — lives quietly in your tray; right-click to exit
+- 📊 **Metrics log** — every capture writes timing data to `metrics.txt`
+- 🚀 **Tiny footprint** — ~5 MB exe, <10 MB RAM when idle
+- 🖥️ **Multi-monitor** — full virtual screen support including negative coordinates
 
-```text
-Shortcut (Default: Shift + S)
-    │
-    ▼
-Fullscreen Overlay
-    │
-    ▼
-Select Region
-    │
-    ▼
-Release Mouse
-    │
-    ▼
-Process Selection
-    │
-    ▼
-Present Results
+---
+
+## Download
+
+👉 **[Download the latest installer from the Releases page](https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest)**
+
+| File | Description |
+|---|---|
+| `SnapAndSearch-Setup.exe` | Windows installer (recommended) |
+| `SnapAndSearch.exe` | Portable — run without installing |
+
+**System requirements:** Windows 10 / 11, 64-bit
+
+---
+
+## Usage
+
+1. Run `SnapAndSearch-Setup.exe` and install.
+2. The app starts silently in your **system tray**.
+3. Press **Ctrl+Shift+S** anywhere on your screen.
+4. **Click and drag** to select a region.
+5. Choose an action from the popup menu:
+   - 🔍 **Search with Google Lens** — opens your browser with results
+   - 💾 **Save Screenshot as PNG** — saved to the `screenshots/` folder
+6. Press **Escape** at any time to cancel.
+
+---
+
+## Configuration
+
+Settings are stored at `%APPDATA%\SnapAndSearch\config.json`:
+
+```json
+{
+  "hotkey": "Ctrl+Shift+S",
+  "screenshots_dir": "C:\\path\\to\\screenshots",
+  "launch_on_startup": false
+}
 ```
 
-No unnecessary dialogs.
-
-No manual uploads.
-
-No interruption to your workflow.
+Set `"launch_on_startup": true` to auto-start with Windows.
 
 ---
 
-## 🚀 Features
+## Architecture
 
-### Current Focus
-
-- Native fullscreen selection overlay
-- Global keyboard shortcuts
-- Rectangle region selection
-- Instant image search
-- Search history
-- System tray application
-- Configurable settings
-
-### Planned
-
-- OCR (Extract Text)
-- AI Explain
-- Translation
-- Product Lookup
-- QR & Barcode Detection
-- Code Search
-- Plugin Architecture
-
----
-
-## 🏗️ Project Philosophy
-
-Snap & Search is designed around a simple architecture:
-
-```text
-Select
-   │
-   ▼
-Capture
-   │
-   ▼
-Process
-   │
-   ▼
-Action
+```
+Ctrl+Shift+S (global hotkey — Win32 RegisterHotKey)
+        │
+        ▼
+Native Transparent Overlay  ←── win-api crate (pure Win32/GDI)
+  WS_EX_LAYERED | TOPMOST        144Hz capable, multi-monitor
+        │
+        ▼
+  BitBlt Screen Capture      ←── capture crate
+  GetDIBits → BGRA pixels
+        │
+        ▼
+  Action Popup Menu          ←── Win32 TrackPopupMenu
+        │
+   ┌────┴────┐
+   ▼         ▼
+JPEG→Lens   PNG→Disk       ←── google-lens plugin / std::fs
+(browser)   (file)
+        │
+        ▼
+  metrics.txt  +  Tray Balloon notification
 ```
 
-The selection experience is the foundation.
+**Crate breakdown:**
 
-Every capability—whether Image Search, OCR, AI, or Translation—builds upon the same capture pipeline.
-
-This modular approach allows new features to be added without changing the core user experience.
-
----
-
-## 📌 Current Status
-
-Snap & Search is currently under active development.
-
-The initial milestone focuses on building a solid foundation:
-
-- Project architecture
-- Native overlay system
-- Screen capture engine
-- Action pipeline
-- Google Image Search integration
-
-Future milestones will expand the platform with additional actions and extensibility.
-
-<!-- ---
-
-## 🛣️ Roadmap
-
-- [ ] Native overlay engine
-- [ ] Region selection
-- [ ] Image processing pipeline
-- [ ] Image Search integration
-- [ ] System tray application
-- [ ] Search history
-- [ ] Settings
-- [ ] OCR
-- [ ] AI actions
-- [ ] Plugin architecture -->
+| Crate | Responsibility |
+|---|---|
+| `service` | Orchestrator — wires everything together |
+| `win-api` | All Win32 FFI: hotkeys, overlay window, tray, registry |
+| `overlay` | Safe wrapper over `win-api`'s overlay window |
+| `capture` | BitBlt screen capture, PNG + JPEG encoding |
+| `settings` | JSON config load/save (`%APPDATA%`) |
+| `plugins/google-lens` | Browser-form Google Lens upload |
 
 ---
 
-## 🤝 Contributing
+## Build from Source
 
-Contributions, ideas, and feedback are welcome.
+**Prerequisites:** [Rust stable](https://rustup.rs/) (MSVC toolchain)
 
-If you'd like to contribute, feel free to open an issue to discuss ideas, report bugs, or suggest improvements before submitting a pull request.
+```powershell
+git clone https://github.com/prasanthkumarch26/Snap-and-Search.git
+cd Snap-and-Search
+cargo build --release -p service
+
+# Run directly:
+.\target\release\service.exe
+```
+
+**Build the installer** (requires [NSIS 3.x](https://nsis.sourceforge.io/)):
+```powershell
+Copy-Item target\release\service.exe target\release\SnapAndSearch.exe
+makensis installer\setup.nsi
+```
+
+---
+
+## Metrics
+
+Every capture session appends a line to `metrics.txt` at the project root:
+
+```
+[2026-09-05 10:30:00] SearchLens | region=800x600 | capture=12ms | jpeg_enc=8ms | jpeg_size=42310B
+[2026-09-05 10:31:00] SaveScreenshot | region=400x300 | capture=6ms | png_enc=45ms | png_size=183204B
+```
+
+**Typical performance on a mid-range PC:**
+
+| Stage | Time |
+|---|---|
+| Hotkey → overlay visible | < 50ms |
+| Mouse release → menu visible | < 100ms |
+| BitBlt screen capture | 5–15ms |
+| JPEG encoding (quality 90) | 5–20ms |
+| PNG encoding (lossless) | 30–80ms |
+| Browser open + Lens upload | 0.5–2s (network) |
+
+---
+
+## Contributing
+
+PRs welcome! See the [project outline](project-outline.txt) for the full roadmap including planned OCR, AI, and translation actions.
+
+---
+
+## License
+
+[MIT](LICENSE) © 2026 Prasanth Kumar

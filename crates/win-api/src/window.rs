@@ -7,6 +7,13 @@ use windows::{
     Win32::UI::Input::KeyboardAndMouse::{SetCapture, ReleaseCapture},
 };
 
+/// The action chosen by the user from the post-selection menu.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OverlayAction {
+    SearchLens,
+    SaveScreenshot,
+}
+
 /// Coordinates of a completed screen selection, in virtual screen space.
 #[derive(Debug, Clone, Copy)]
 pub struct SelectionRect {
@@ -16,7 +23,7 @@ pub struct SelectionRect {
     pub height: i32,
 }
 
-type CaptureCallback = Box<dyn Fn(SelectionRect) + Send + 'static>;
+type CaptureCallback = Box<dyn Fn(SelectionRect, OverlayAction) + Send + 'static>;
 
 struct WindowState {
     is_dragging: bool,
@@ -30,14 +37,12 @@ pub struct OverlayWindow {
 }
 
 impl OverlayWindow {
-    pub fn new(on_capture: impl Fn(SelectionRect) + Send + 'static) -> Result<Self> {
+    pub fn new(on_capture: impl Fn(SelectionRect, OverlayAction) + Send + 'static) -> Result<Self> {
         unsafe {
             let instance = GetModuleHandleW(None)?;
-            debug_assert!(!instance.0.is_null());
 
             let window_class = w!("ScreenIntelligenceOverlayClass");
 
-            // Avoid re-registering the class if already registered
             let mut wc_info = WNDCLASSW::default();
             if GetClassInfoW(Some(instance.into()), window_class, &mut wc_info).is_err() {
                 let wc = WNDCLASSW {
@@ -69,12 +74,8 @@ impl OverlayWindow {
                 window_class,
                 w!("Screen Intelligence Overlay"),
                 WS_POPUP,
-                x,
-                y,
-                cx,
-                cy,
-                None,
-                None,
+                x, y, cx, cy,
+                None, None,
                 Some(instance.into()),
                 Some(state as *const _ as _),
             )?;
@@ -105,19 +106,57 @@ impl OverlayWindow {
 
     unsafe fn get_state<'a>(hwnd: HWND) -> Option<&'a mut WindowState> {
         let ptr = unsafe { GetWindowLongPtrW(hwnd, GWLP_USERDATA) };
-        if ptr == 0 {
-            None
-        } else {
-            Some(unsafe { &mut *(ptr as *mut WindowState) })
+        if ptr == 0 { None } else { Some(unsafe { &mut *(ptr as *mut WindowState) }) }
+    }
+
+    /// Show a native Win32 popup menu at the current cursor position.
+    /// `hwnd` must be a window on the calling thread (used as menu owner).
+    /// Returns the chosen `OverlayAction`, or `None` if dismissed.
+    unsafe fn show_action_menu(hwnd: HWND) -> Option<OverlayAction> {
+        let mut cursor = POINT::default();
+        unsafe { let _ = GetCursorPos(&mut cursor); }
+
+        let menu = unsafe { CreatePopupMenu().ok()? };
+
+        unsafe {
+            let _ = AppendMenuW(menu, MF_STRING, 1, w!("🔍  Search with Google Lens"));
+            let _ = AppendMenuW(menu, MF_STRING, 2, w!("💾  Save Screenshot as PNG"));
+        }
+
+        // TrackPopupMenu requires the parent window to be the foreground window.
+        // This is a documented Win32 requirement, otherwise the menu silently fails.
+        unsafe { let _ = SetForegroundWindow(hwnd); }
+
+        let result = unsafe {
+            TrackPopupMenu(
+                menu,
+                TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD,
+                cursor.x,
+                cursor.y,
+                Some(0),
+                hwnd,   // must be a window on THIS thread, not GetDesktopWindow()
+                None,
+            )
+        };
+
+        // Required after TrackPopupMenu to flush the message queue correctly
+        unsafe { let _ = PostMessageW(Some(hwnd), WM_NULL, WPARAM(0), LPARAM(0)); }
+
+        unsafe { let _ = DestroyMenu(menu); }
+
+        match result.0 {
+            1 => Some(OverlayAction::SearchLens),
+            2 => Some(OverlayAction::SaveScreenshot),
+            _ => None,
         }
     }
 
     extern "system" fn wndproc(window: HWND, message: u32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
         unsafe {
             if message == WM_NCCREATE {
-                let create_struct = lparam.0 as *const CREATESTRUCTW;
-                if !create_struct.is_null() {
-                    Self::set_state(window, (*create_struct).lpCreateParams as isize);
+                let cs = lparam.0 as *const CREATESTRUCTW;
+                if !cs.is_null() {
+                    Self::set_state(window, (*cs).lpCreateParams as isize);
                 }
                 return DefWindowProcW(window, message, wparam, lparam);
             }
@@ -151,18 +190,18 @@ impl OverlayWindow {
                         state.is_dragging = false;
                         let _ = ReleaseCapture();
 
-                        // Normalize so start is always top-left
                         let x = state.start_point.x.min(state.current_point.x);
                         let y = state.start_point.y.min(state.current_point.y);
                         let w = (state.start_point.x - state.current_point.x).abs();
                         let h = (state.start_point.y - state.current_point.y).abs();
 
-                        // Only fire capture if the selection is meaningful (> 5px)
+                        // Only act on meaningful selections (> 5px in each dimension)
                         if w > 5 && h > 5 {
-                            // Hide the overlay BEFORE capturing so it doesn't appear in screenshot
+                            // Hide the overlay BEFORE capturing so it won't appear in screenshot
                             let _ = ShowWindow(window, SW_HIDE);
+                            let _ = UpdateWindow(window);
 
-                            // We need to account for the virtual screen offset
+                            // Account for virtual screen offset (multi-monitor support)
                             let vscreen_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
                             let vscreen_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
 
@@ -172,8 +211,11 @@ impl OverlayWindow {
                                 width: w,
                                 height: h,
                             };
-                            println!("Selection complete: {:?}", rect);
-                            (state.on_capture)(rect);
+
+                            // Show the action menu; if dismissed (Escape), do nothing
+                            if let Some(action) = Self::show_action_menu(window) {
+                                (state.on_capture)(rect, action);
+                            }
                         } else {
                             let _ = ShowWindow(window, SW_HIDE);
                         }
@@ -185,26 +227,16 @@ impl OverlayWindow {
                     let hdc = BeginPaint(window, &mut ps);
 
                     if state.is_dragging {
-                        // Draw a semi-transparent dark fill over the selection
-                        let sel_rect = RECT {
-                            left: state.start_point.x.min(state.current_point.x),
-                            top: state.start_point.y.min(state.current_point.y),
-                            right: state.start_point.x.max(state.current_point.x),
-                            bottom: state.start_point.y.max(state.current_point.y),
-                        };
-
-                        // White outline pen (2px solid)
                         let pen = CreatePen(PS_SOLID, 2, COLORREF(0x00FFFFFF));
                         let old_pen = SelectObject(hdc, pen.into());
-                        // Hollow brush so the interior is transparent
                         let old_brush = SelectObject(hdc, GetStockObject(NULL_BRUSH).into());
 
                         let _ = Rectangle(
                             hdc,
-                            sel_rect.left,
-                            sel_rect.top,
-                            sel_rect.right,
-                            sel_rect.bottom,
+                            state.start_point.x.min(state.current_point.x),
+                            state.start_point.y.min(state.current_point.y),
+                            state.start_point.x.max(state.current_point.x),
+                            state.start_point.y.max(state.current_point.y),
                         );
 
                         SelectObject(hdc, old_brush);
@@ -216,8 +248,8 @@ impl OverlayWindow {
                     LRESULT(0)
                 }
                 WM_KEYDOWN => {
-                    // Escape cancels the selection
                     if wparam.0 == 0x1B {
+                        // Escape cancels
                         state.is_dragging = false;
                         let _ = ShowWindow(window, SW_HIDE);
                         LRESULT(0)
@@ -226,7 +258,6 @@ impl OverlayWindow {
                     }
                 }
                 WM_DESTROY => {
-                    // Free the state box when the window is destroyed
                     let ptr = GetWindowLongPtrW(window, GWLP_USERDATA);
                     if ptr != 0 {
                         let _ = Box::from_raw(ptr as *mut WindowState);

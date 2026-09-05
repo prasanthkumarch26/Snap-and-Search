@@ -23,19 +23,10 @@ impl CapturedFrame {
             .expect("Buffer dimensions must match width * height * 4")
     }
 
-    /// Encode this frame to lossless PNG bytes.
-    ///
-    /// PNG is preferred over JPEG for screen captures because it is lossless,
-    /// preserving sharp text, UI edges and icons exactly — which matters
-    /// for image recognition and OCR.
+    /// Encode to lossless PNG with default compression.
+    /// Use this for Save-as-file actions where quality matters most.
     pub fn to_png_bytes(&self) -> Result<Vec<u8>, String> {
-        // Clone and swap BGR -> RGB channel order for the image crate
-        let mut pixels = self.data.clone();
-        for chunk in pixels.chunks_exact_mut(4) {
-            chunk.swap(0, 2); // B <-> R
-        }
-        let rgba_img = image::RgbaImage::from_raw(self.width, self.height, pixels)
-            .ok_or("Invalid pixel buffer dimensions")?;
+        let rgba_img = self.to_rgba_image_cloned()?;
 
         let mut png_bytes: Vec<u8> = Vec::new();
         let encoder = image::codecs::png::PngEncoder::new(&mut png_bytes);
@@ -49,6 +40,37 @@ impl CapturedFrame {
         .map_err(|e| format!("PNG encoding failed: {}", e))?;
 
         Ok(png_bytes)
+    }
+
+    /// Encode to JPEG at the given quality (0–100).
+    ///
+    /// Use this for upload actions (e.g. Google Lens) where:
+    /// - Speed matters more than lossless fidelity
+    /// - Smaller bytes = faster base64 decode in browser + faster network upload
+    /// - Quality 85–90 is indistinguishable for image recognition
+    pub fn to_jpeg_bytes(&self, quality: u8) -> Result<Vec<u8>, String> {
+        // JPEG doesn't support alpha, convert RGBA → RGB
+        let rgba_img = self.to_rgba_image_cloned()?;
+        let rgb_img = image::DynamicImage::ImageRgba8(rgba_img).to_rgb8();
+
+        let mut jpeg_bytes: Vec<u8> = Vec::new();
+        let mut encoder =
+            image::codecs::jpeg::JpegEncoder::new_with_quality(&mut jpeg_bytes, quality);
+        encoder
+            .encode_image(&rgb_img)
+            .map_err(|e| format!("JPEG encoding failed: {}", e))?;
+
+        Ok(jpeg_bytes)
+    }
+
+    // Internal helper: clone pixel data and swap BGR → RGB for the image crate
+    fn to_rgba_image_cloned(&self) -> Result<image::RgbaImage, String> {
+        let mut pixels = self.data.clone();
+        for chunk in pixels.chunks_exact_mut(4) {
+            chunk.swap(0, 2); // B <-> R
+        }
+        image::RgbaImage::from_raw(self.width, self.height, pixels)
+            .ok_or_else(|| "Invalid pixel buffer dimensions".to_string())
     }
 }
 

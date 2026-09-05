@@ -1,0 +1,91 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"   # triggers on git tag e.g. v1.0.0
+  workflow_dispatch:  # allow manual trigger from GitHub UI
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-windows:
+    name: Build Windows Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Build release binary
+        run: cargo build --release -p service
+
+      - name: Rename binary
+        run: |
+          Copy-Item target\release\service.exe -Destination target\release\SnapAndSearch.exe
+
+      - name: Install NSIS
+        run: |
+          choco install nsis -y
+
+      - name: Build NSIS installer
+        run: |
+          & "C:\Program Files (x86)\NSIS\makensis.exe" installer\setup.nsi
+
+      - name: Upload portable exe as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SnapAndSearch-portable
+          path: target\release\SnapAndSearch.exe
+
+      - name: Upload installer as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SnapAndSearch-installer
+          path: installer\SnapAndSearch-Setup.exe
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Snap and Search ${{ github.ref_name }}"
+          body: |
+            ## Snap and Search ${{ github.ref_name }}
+
+            A native Windows utility for instant screen capture and Google Lens search.
+
+            ### Installation
+            1. Download `SnapAndSearch-Setup.exe` below and run it.
+            2. The app starts silently in your system tray.
+            3. Press **Ctrl+Shift+S** anywhere to start capturing.
+
+            ### Portable
+            Download `SnapAndSearch.exe` and run it directly — no installation needed.
+
+            ### What's new
+            See [CHANGELOG](https://github.com/prasanthkumarch26/Snap-and-Search/blob/main/CHANGELOG.md).
+          files: |
+            installer/SnapAndSearch-Setup.exe
+            target/release/SnapAndSearch.exe
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

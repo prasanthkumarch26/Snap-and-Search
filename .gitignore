@@ -1,1 +1,5 @@
 project-outline.txt
+screenshots/target/
+*.pdb
+screenshots/
+metrics.txt
