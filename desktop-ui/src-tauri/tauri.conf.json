@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "app",
+  "productName": "Snap and Search",
   "version": "0.1.0",
-  "identifier": "com.ch-prasanth-kumar.app",
+  "identifier": "com.snap-and-search.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "app",
+        "label": "main",
+        "title": "Snap & Search - Settings & History",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "visible": false
       }
     ],
     "security": {

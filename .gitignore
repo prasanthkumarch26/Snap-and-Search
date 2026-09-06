@@ -3,3 +3,9 @@ screenshots/target/
 *.pdb
 screenshots/
 metrics.txt
+
+target/
+target_new/
+desktop-ui/node_modules/
+desktop-ui/dist/
+.env

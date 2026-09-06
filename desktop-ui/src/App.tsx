@@ -1,42 +1,89 @@
 "use client"
 
+import { useEffect, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
-import { useEffect, useRef } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+
+interface Screenshot {
+  name: string;
+  data: string;
+}
 
 function App() {
-  const overlayRef = useRef<HTMLElement>(null);
+  const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-    console.log("🔥 React App Mounted!");
-    
-    try {
-      const currentWindow = getCurrentWindow();
-      console.log("✅ Current window identified:", currentWindow.label);
-
-      const handleKeyDown = async (event: KeyboardEvent) => {
-        console.log("⌨️ Key pressed:", event.key);
-        if (event.key === "Escape") {
-          console.log("Closing window...");
-          await currentWindow.close();
-        }
-      };
-
-      // Listen on the document instead of window
-      document.addEventListener("keydown", handleKeyDown);
-
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
-    } catch (error) {
-      console.error("❌ Error in useEffect:", error);
-    }
+  useEffect(() => {
+    loadScreenshots();
   }, []);
 
+  const loadScreenshots = async () => {
+    try {
+      setLoading(true);
+      const names: string[] = await invoke("get_screenshots");
+      
+      const loaded: Screenshot[] = [];
+      for (const name of names) {
+        try {
+          const base64Data: string = await invoke("get_screenshot_base64", { name });
+          loaded.push({ name, data: `data:image/png;base64,${base64Data}` });
+        } catch (e) {
+          console.error(`Failed to load ${name}`, e);
+        }
+      }
+      
+      setScreenshots(loaded);
+    } catch (error) {
+      console.error("Failed to load screenshots:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <main
-      ref={overlayRef}
-    >
+    <main className="container">
+      <header>
+        <h1>Snap & Search</h1>
+        <p>Your screen intelligence history and settings</p>
+      </header>
+      
+      <section className="settings-panel">
+        <h2>Settings</h2>
+        <div className="setting-item">
+          <label>Global Hotkey:</label>
+          <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+        </div>
+        <p className="setting-note">
+          Keep this app running in the background. It hides to the system tray when closed.
+        </p>
+      </section>
+
+      <section className="history-panel">
+        <div className="history-header">
+          <h2>Capture History</h2>
+          <button onClick={loadScreenshots} className="refresh-btn">
+            ↻ Refresh
+          </button>
+        </div>
+        
+        {loading ? (
+          <p className="loading">Loading your history...</p>
+        ) : screenshots.length === 0 ? (
+          <div className="empty-state">
+            <p>No screenshots saved yet.</p>
+            <p>Use the hotkey and choose "Save Screenshot" to see them here.</p>
+          </div>
+        ) : (
+          <div className="gallery">
+            {screenshots.map((s) => (
+              <div key={s.name} className="gallery-item">
+                <img src={s.data} alt={s.name} loading="lazy" />
+                <div className="item-name">{s.name}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 }
