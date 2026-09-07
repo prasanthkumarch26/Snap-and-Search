@@ -1,205 +1,327 @@
-# Snap & Search
+<div align="center">
 
-> **Snap anything. Search instantly.**
+<img src="assets/placeholder.png" alt="Snap & Search Logo" width="128" />
 
-A Windows-native visual search application that lets you select any region of your screen and instantly search it on the web.
+<h1>Snap & Search</h1>
 
-Inspired by the seamless interaction of modern visual search experiences, Snap & Search brings a fast, keyboard-driven workflow to Windows with a polished native overlay.
+<p><strong>Snap anything. Search instantly.</strong></p>
 
----
+<p>
+Turn anything on your screen into something you can <strong>search, scan, translate, or save</strong> —
+without taking screenshots, manually uploading images, or interrupting your workflow.
+</p>
 
-## ✨ Overview
+<p><strong>Ctrl + Shift + S → Select → Act.</strong></p>
 
-Searching something on your screen shouldn't require taking a screenshot, opening a browser, uploading an image, and waiting for results.
+<a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_0.1.0_x64_en-US.msi">
+<b>📦 Download for Windows (.msi)</b>
+</a>
+&nbsp;&nbsp;|&nbsp;&nbsp;
+<a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_0.1.0_x64-setup.exe">
+<b>🏃 Portable (.exe)</b>
+</a>
 
-Snap & Search makes visual search feel like a built-in Windows feature.
+<p>
+Windows 10 / 11 · 64-bit · Free
+</p>
 
-Simply:
-
-1. Press a keyboard shortcut.
-2. Select any region on your screen.
-3. Search instantly.
-
-Whether it's an image, UI element, product, diagram, code snippet, or anything else visible on your display, Snap & Search lets you find relevant information in seconds.
-
----
-
-## 🎯 Vision
-
-Snap & Search is built around one simple idea:
-
-> **Everything visible on your screen should be instantly actionable.**
-
-The project focuses on creating a native Windows experience that feels familiar from the very first use. Instead of introducing a new workflow, Snap & Search embraces the interaction patterns Windows users already know while extending them with powerful visual search capabilities.
-
-Image Search is only the beginning. The long-term vision is to build a modular screen intelligence platform capable of understanding and interacting with any selected region on the screen.
+</div>
 
 ---
 
-## 🖥️ User Experience
+## ✨ Why Snap & Search?
 
-The experience is intentionally designed to feel like a natural extension of Windows.
+Ever seen something on your screen and wondered:
+
+- 🛍️ **What product is this?**
+- 🌐 **What does this foreign text mean?**
+- 🐛 **What does this error message mean?**
+- 🖼️ **Where does this image come from?**
+- 🔗 **What's inside this QR code?**
+
+Normally, you'd take a screenshot, save it, open a browser, upload the image, and search manually.
+
+**Snap & Search removes those extra steps.**
 
 ```text
-Shortcut (Default: Shift + S)
-    │
-    ▼
-Fullscreen Overlay
-    │
-    ▼
-Select Region
-    │
-    ▼
-Release Mouse
-    │
-    ▼
-Process Selection
-    │
-    ▼
-Present Results
+Ctrl + Shift + S
+       ↓
+Select anything on your screen
+       ↓
+🔍 Search   🔗 Scan QR   💾 Save
 ```
 
-No unnecessary dialogs.
-
-No manual uploads.
-
-No interruption to your workflow.
-
-<!-- ---
+---
 
 ## 🚀 Features
 
-### Current Focus
+### 🔍 Search Anything You See
 
-- Native fullscreen selection overlay
-- Global keyboard shortcuts
-- Rectangle region selection
-- Instant image search
-- Search history
-- System tray application
-- Configurable settings
+Select any image, product, diagram, object, or visual content and search it with Google Lens.
 
-### Planned
+Google Lens can help with:
 
-- OCR (Extract Text)
-- AI Explain
+- Reverse image search
+- OCR and text extraction
 - Translation
-- Product Lookup
-- QR & Barcode Detection
-- Code Search
-- Plugin Architecture -->
+- Product discovery
+- Visual search
 
 ---
 
-## 🏗️ Project Philosophy
+### 🔗 Scan QR Codes Directly From Your Screen
 
-Snap & Search is designed around a simple architecture:
+No phone required.
+
+Select a QR code visible anywhere on your screen and Snap & Search decodes it instantly.
+
+- 📋 Copies decoded text to your clipboard
+- 🌐 Automatically opens URLs in your default browser
+
+---
+
+### 💾 Save Screenshots Instantly
+
+Capture any region and save it as a lossless PNG.
+
+Your screenshots are stored locally and can be accessed through the History dashboard.
+
+---
+
+### 🖥️ Works Across Multiple Monitors
+
+Snap & Search supports the full Windows virtual desktop.
+
+Select content across multiple monitors, including displays using negative coordinates.
+
+---
+
+### ⚡ Feels Like a Built-In Windows Feature
+
+The capture experience uses native Windows APIs for fast, lightweight interaction.
+
+- Global keyboard shortcut
+- Native fullscreen overlay
+- Crosshair cursor
+- Rectangle selection
+- Native action menu
+- System tray integration
+
+---
+
+### 👻 Lightweight Background Service
+
+Snap & Search stays quietly in your system tray until you need it.
+
+- ~8 MB idle RAM
+- ~0% idle CPU usage
+- Event-driven architecture
+- No browser extension required
+
+---
+
+### 📊 Settings & History Dashboard
+
+A lightweight dashboard built with **Tauri + React + TypeScript** provides:
+
+- Screenshot history
+- Settings management
+- Application configuration
+
+The screen capture pipeline remains native and independent from the UI layer.
+
+---
+
+## ⚡ Built to Feel Instant
+
+The native interaction pipeline is designed to stay out of your way.
+
+| Interaction | Latency |
+|---|---:|
+| Process launch → tray ready | **< 150ms** |
+| `Ctrl + Shift + S` → overlay visible | **< 50ms** |
+| Mouse release → action menu | **< 15ms** |
+
+For screen search, most end-to-end delay comes from **network transfer and Google Lens processing**. Native overlay and selection interactions are near-instant from the user's perspective.
+
+---
+
+## 📊 Performance
+
+Performance primarily scales with the number of pixels in the selected region.
+
+### 🖥️ Screen Capture Latency
+
+| Resolution | P50 | P95 | P99 |
+|---|---:|---:|---:|
+| **1080p (1920×1080)** | 4.1ms | **6.2ms** | 8.1ms |
+| **4K (3840×2160)** | 9.8ms | **14.5ms** | 18.2ms |
+
+The capture pipeline uses native **Win32/GDI APIs** to extract the selected region into raw BGRA pixel buffers.
+
+---
+
+### 🖼️ Image Encoding
+
+| Format | Resolution | P50 | P95 | P99 |
+|---|---|---:|---:|---:|
+| **JPEG (Quality 90)** | 1080p | 77.0ms | 92.7ms | 112.0ms |
+| **PNG (Lossless)** | 1080p | 20.8ms | 27.4ms | 35.1ms |
+
+**JPEG** is used for Google Lens uploads because its smaller payload reduces network transfer time.
+
+**PNG** is used for local screenshots where lossless output is preferred.
+
+---
+
+## 🧪 Reliability
+
+Snap & Search was tested across repeated capture cycles:
+
+- **1,000 consecutive captures**
+- **100% successful completion**
+- **No observable memory growth** during repeated capture cycles
+
+---
+
+## 🏗️ How It Works
+
+Snap & Search combines a native Rust capture engine with a modern lightweight desktop UI.
 
 ```text
-Select
-   │
-   ▼
-Capture
-   │
-   ▼
-Process
-   │
-   ▼
-Action
+Ctrl + Shift + S
+       │
+       ▼
+Win32 Global Hotkey
+       │
+       ▼
+Native Selection Overlay
+(Rust + Win32 + GDI)
+       │
+       ▼
+Multi-Monitor Screen Capture
+(BitBlt → BGRA Buffer)
+       │
+       ▼
+Native Action Menu
+       │
+ ┌─────┼─────────────┐
+ ▼     ▼             ▼
+Lens  QR Scan   Save PNG
+ │       │           │
+ ▼       ▼           ▼
+Browser Clipboard   Disk
 ```
 
-The selection experience is the foundation.
+### Architecture
 
-Every capability—whether Image Search, OCR, AI, or Translation—builds upon the same capture pipeline.
-
-This modular approach allows new features to be added without changing the core user experience.
-
----
-
-## 📌 Current Status
-
-Snap & Search v0.1.0 is currently built and operational.
-
-The initial milestone has been completed successfully:
-
-- [x] Project architecture & workspaces
-- [x] Native transparent overlay system
-- [x] Screen capture engine (Win32 BitBlt)
-- [x] Action pipeline & native popup menu
-- [x] Google Image Search integration (Lens via browser upload)
-- [x] System tray application with hidden background thread
-- [x] Settings & Screenshot History dashboard (Tauri + React)
-
-Future milestones will expand the platform with additional actions and extensibility.
+- **Rust + Win32/GDI** — Global hotkeys, layered windows, native menus, and screen capture.
+- **Native Capture Engine** — Converts selected screen regions into raw BGRA pixel buffers.
+- **Action Pipeline** — Handles Google Lens search, QR decoding, and PNG storage.
+- **Tauri + React** — Provides settings and screenshot history through a lightweight desktop dashboard.
+- **Event-Driven Service** — Remains idle until triggered by Windows events.
 
 ---
 
-## 📊 Performance & Metrics Showcase
+## 📦 Resource Usage
 
-Snap and Search is engineered for speed and reliability, avoiding the overhead of heavy frameworks by using a native Rust core and raw Win32 APIs for the capture pipeline.
+| Metric | Value |
+|---|---:|
+| Idle RAM | **~8 MB** |
+| Idle CPU | **~0%** |
+| Executable Size | **~9.07 MB** |
 
-### 1️⃣ Startup & Responsiveness
-- **Startup:** Process launch to system tray ready: **< 150ms**
-- **Hotkey Responsiveness:** `Ctrl+Shift+S` to overlay fully visible: **< 50ms**
-- **Menu Invocation:** Mouse release to native Win32 action menu: **< 15ms**
-
-### 2️⃣ Capture Latency (BitBlt)
-Measured native zero-copy screen capture latency to raw BGRA buffer:
-| Resolution | P50 | P95 | P99 |
-|---|---|---|---|
-| **1080p** (1920x1080) | 4.1 ms | 6.2 ms | 8.1 ms |
-| **4K** (3840x2160) | 9.8 ms | 14.5 ms | 18.2 ms |
-
-### 3️⃣ Encoding Latency
-Encoding raw buffers to memory for actions (e.g. Lens upload vs Local Save):
-| Format & Resolution | P50 | P95 | P99 |
-|---|---|---|---|
-| **JPEG** (Quality 90) - 1080p | 77.0 ms | 92.7 ms | 112.0 ms |
-| **PNG** (Lossless) - 1080p | 20.8 ms | 27.4 ms | 35.1 ms |
-| **JPEG** (Quality 90) - 4K | 298.4 ms | 314.7 ms | 335.2 ms |
-| **PNG** (Lossless) - 4K | 84.4 ms | 96.8 ms | 110.5 ms |
-*(Note: JPEG is used for web uploads because the payload size is 5-8x smaller, making the network upload significantly faster despite slightly higher CPU encoding cost).*
-
-### 4️⃣ Resource Usage & Footprint
-- **Idle RAM:** ~8 MB
-- **Idle CPU:** 0.0% (Application thread sleeps completely awaiting hardware interrupts)
-- **Main Executable Size:** ~9.07 MB (Standalone Tauri Release Build)
-- **Total Custom Code:** ~1500 lines (Rust/TS/CSS)
-
-### 5️⃣ Reliability
-- **Stress Test (1,000 consecutive captures):** 100% Success Rate
-- **Memory Growth:** 0 MB leaks (Buffer completely freed after each capture)
+The application remains event-driven while idle and waits for Windows messages such as `WM_HOTKEY`.
 
 ---
 
-## 📥 Download & Install
+## 📥 Download
 
-You can download the latest official release for Windows here:
+### Windows Installer
 
-- **[📦 Download Windows Installer (.msi)](https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_x64_en-US.msi)** *(Recommended)*
-- **[🏃 Download Portable (.exe)](https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_x64-setup.exe)**
+Recommended for most users:
 
-**System requirements:** Windows 10 / 11 (64-bit)
+👉 <a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_0.1.0_x64_en-US.msi"><strong>📦 Download Snap & Search for Windows</strong></a>
 
-<!-- ---
+### Portable Version
+
+Run without installation:
+
+👉 <a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_0.1.0_x64-setup.exe"><strong>🏃 Download Portable .exe</strong></a>
+
+**System Requirements:**
+
+- Windows 10 or Windows 11
+- 64-bit system
+
+---
+
+## 🛠️ Build From Source
+
+### Prerequisites
+
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Node.js](https://nodejs.org/en/)
+
+```bash
+# Clone the repository
+git clone https://github.com/prasanthkumarch26/Snap-and-Search.git
+
+# Open the desktop application
+cd Snap-and-Search/desktop-ui
+
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run tauri dev
+```
+
+### Build for Release
+
+```bash
+npm run tauri build
+```
+
+---
 
 ## 🛣️ Roadmap
 
-- [x] Native overlay engine
-- [x] Region selection
-- [x] Image processing pipeline
-- [x] Image Search integration
+### ✅ Completed
+
+- [x] Native Win32 selection overlay
+- [x] Multi-monitor virtual screen support
+- [x] Google Lens visual search
+- [x] On-screen QR code decoding
 - [x] System tray application
-- [x] Search history
-- [x] Settings
-- [ ] OCR
-- [ ] AI actions
-- [ ] Plugin architecture -->
+- [x] Local PNG screenshot saving
+- [x] Settings and History dashboard
+
+### 🔜 Planned
+
+- [ ] ☁️ Cloud share links
+- [ ] 📌 Pin to Screen / Reference Mode
+- [ ] 🧠 Local AI Vision with Ollama
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, ideas, and feedback are welcome.
+Contributions, ideas, and feedback are welcome!
 
-If you'd like to contribute, feel free to open an issue to discuss ideas, report bugs, or suggest improvements before submitting a pull request.
+Feel free to:
+
+- 🐛 Report bugs
+- 💡 Suggest features
+- 🛠️ Open pull requests
+- ⭐ Star the repository if you find Snap & Search useful
+
+---
+
+<div align="center">
+
+<h3>Snap anything. Search instantly.</h3>
+
+<p>Made for Windows users who want to act on what's already on their screen.</p>
+
+</div>
