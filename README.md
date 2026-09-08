@@ -13,11 +13,11 @@ without taking screenshots, manually uploading images, or interrupting your work
 
 <p><strong>Ctrl + Shift + S → Select → Act.</strong></p>
 
-<a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap%20and%20Search_0.1.0_x64_en-US.msi">
+<a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap.and.Search_0.1.0_x64_en-US.msi">
 <b>📦 Download Windows Installer (.msi)</b>
 </a>
 &nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap%20and%20Search_0.1.0_x64-setup.exe">
+<a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap.and.Search_0.1.0_x64-setup.exe">
 <b>🏃 Portable (.exe)</b>
 </a>
 
