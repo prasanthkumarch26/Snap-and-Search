@@ -33,11 +33,11 @@ Windows 10 / 11 · 64-bit · Free
 
 Ever seen something on your screen and wondered:
 
-- 🛍️ **What product is this?**
-- 🌐 **What does this foreign text mean?**
-- 🐛 **What does this error message mean?**
-- 🖼️ **Where does this image come from?**
-- 🔗 **What's inside this QR code?**
+* 🛍️ **What product is this?**
+* 🌐 **What does this foreign text mean?**
+* 🐛 **What does this error message mean?**
+* 🖼️ **Where does this image come from?**
+* 🔗 **What's inside this QR code?**
 
 Normally, you'd take a screenshot, save it, open a browser, upload the image, and search manually.
 
@@ -45,223 +45,229 @@ Normally, you'd take a screenshot, save it, open a browser, upload the image, an
 
 ```text
 Ctrl + Shift + S
-       ↓
+        ↓
 Select anything on your screen
-       ↓
+        ↓
 🔍 Search   🔗 Scan QR   💾 Save
 ```
 
 ---
 
-## 🚀 Features
+# 🚀 Features
 
-### 🔍 Search Anything You See
+## 🔍 Search Anything You See
 
 Select any image, product, diagram, object, or visual content and search it with Google Lens.
 
 Google Lens can help with:
 
-- Reverse image search
-- OCR and text extraction
-- Translation
-- Product discovery
-- Visual search
+* Reverse image search
+* OCR and text extraction
+* Translation
+* Product discovery
+* Visual search
+
+No browser extension. No manual screenshot uploads.
 
 ---
 
-### 🔗 Scan QR Codes Directly From Your Screen
+## 🔗 Scan QR Codes Directly From Your Screen
 
 No phone required.
 
-Select a QR code visible anywhere on your screen and Snap & Search decodes it instantly.
+Select a QR code visible anywhere on your screen and Snap & Search decodes it directly.
 
-- 📋 Copies decoded text to your clipboard
-- 🌐 Automatically opens URLs in your default browser
+* 📋 Copies decoded text to your clipboard
+* 🌐 Automatically opens URLs in your default browser
 
 ---
 
-### 💾 Save Screenshots Instantly
+## 💾 Save Screenshots Instantly
 
 Capture any region and save it as a lossless PNG.
 
-Your screenshots are stored locally and can be accessed through the History dashboard.
+Your screenshots stay local and can be accessed through the History dashboard.
 
 ---
 
-### 🖥️ Works Across Multiple Monitors
+## 🖥️ Works Across Multiple Monitors
 
 Snap & Search supports the full Windows virtual desktop.
 
-Select content across multiple monitors, including displays using negative coordinates.
+Select content across multiple monitors, including displays with negative coordinates.
 
 ---
 
-### ⚡ Feels Like a Built-In Windows Feature
+## ⚡ Feels Like a Built-In Windows Feature
 
 The capture experience uses native Windows APIs for fast, lightweight interaction.
 
-- Global keyboard shortcut
-- Native fullscreen overlay
-- Crosshair cursor
-- Rectangle selection
-- Native action menu
-- System tray integration
+* Global keyboard shortcut
+* Native fullscreen overlay
+* Crosshair cursor
+* Rectangle selection
+* Native action menu
+* System tray integration
+
+The interaction pipeline stays separate from the dashboard UI, keeping screen selection fast and responsive.
 
 ---
 
-### 👻 Lightweight Background Service
+## 👻 Lightweight Background Service
 
 Snap & Search stays quietly in your system tray until you need it.
 
-- ~8 MB idle RAM
-- ~0% idle CPU usage
-- Event-driven architecture
-- No browser extension required
+* ~8 MB idle RAM
+* ~0% idle CPU usage
+* Event-driven architecture
+* No browser extension required
 
 ---
 
-### 📊 Settings & History Dashboard
+## 📊 Settings & History Dashboard
 
 A lightweight dashboard built with **Tauri + React + TypeScript** provides:
 
-- Screenshot history
-- Settings management
-- Application configuration
+* Screenshot history
+* Settings management
+* Application configuration
 
-The screen capture pipeline remains native and independent from the UI layer.
+The screen capture and selection pipeline remains native and independent from the UI layer.
 
 ---
 
-## ⚡ Built to Feel Instant
+# ⚡ Built to Feel Instant
 
 The native interaction pipeline is designed to stay out of your way.
 
-| Interaction | Latency |
-|---|---:|
-| Process launch → tray ready | **< 150ms** |
-| `Ctrl + Shift + S` → overlay visible | **< 50ms** |
-| Mouse release → action menu | **< 15ms** |
+| Interaction                          |     Latency |
+| ------------------------------------ | ----------: |
+| Process launch → tray ready          | **< 150ms** |
+| `Ctrl + Shift + S` → overlay visible |  **< 50ms** |
+| Mouse release → action menu          |  **< 15ms** |
 
-For screen search, most end-to-end delay comes from **network transfer and Google Lens processing**. Native overlay and selection interactions are near-instant from the user's perspective.
+For visual search, most end-to-end delay comes from **network transfer and Google Lens processing**.
+
+The native overlay, selection, and menu interactions are designed to feel near-instant.
 
 ---
 
-## 📊 Performance
+# 📊 Performance
 
 Performance primarily scales with the number of pixels in the selected region.
 
-### 🖥️ Screen Capture Latency
+## 🖥️ Screen Capture Latency
 
-| Resolution | P50 | P95 | P99 |
-|---|---:|---:|---:|
-| **1080p (1920×1080)** | 4.1ms | **6.2ms** | 8.1ms |
-| **4K (3840×2160)** | 9.8ms | **14.5ms** | 18.2ms |
+| Resolution            |   P50 |        P95 |    P99 |
+| --------------------- | ----: | ---------: | -----: |
+| **1080p (1920×1080)** | 4.1ms |  **6.2ms** |  8.1ms |
+| **4K (3840×2160)**    | 9.8ms | **14.5ms** | 18.2ms |
 
-The capture pipeline uses native **Win32/GDI APIs** to extract the selected region into raw BGRA pixel buffers.
+The capture pipeline uses native **Win32/GDI APIs** to extract selected regions into raw BGRA pixel buffers.
 
 ---
 
-### 🖼️ Image Encoding
+## 🖼️ Image Encoding
 
-| Format | Resolution | P50 | P95 | P99 |
-|---|---|---:|---:|---:|
-| **JPEG (Quality 90)** | 1080p | 77.0ms | 92.7ms | 112.0ms |
-| **PNG (Lossless)** | 1080p | 20.8ms | 27.4ms | 35.1ms |
+| Format                | Resolution |    P50 |    P95 |     P99 |
+| --------------------- | ---------- | -----: | -----: | ------: |
+| **JPEG (Quality 90)** | 1080p      | 77.0ms | 92.7ms | 112.0ms |
+| **PNG (Lossless)**    | 1080p      | 20.8ms | 27.4ms |  35.1ms |
 
-**JPEG** is used for Google Lens uploads because its smaller payload reduces network transfer time.
+**JPEG** is used for Google Lens uploads because its smaller payload can reduce network transfer time.
 
 **PNG** is used for local screenshots where lossless output is preferred.
 
 ---
 
-## 🧪 Reliability
+# 🧪 Reliability
 
 Snap & Search was tested across repeated capture cycles:
 
-- **1,000 consecutive captures**
-- **100% successful completion**
-- **No observable memory growth** during repeated capture cycles
+* **1,000 consecutive captures**
+* **100% successful completion**
+* **No observable memory growth** during repeated capture cycles
 
 ---
 
-## 🏗️ How It Works
+# 🏗️ How It Works
 
-Snap & Search combines a native Rust capture engine with a modern lightweight desktop UI.
+Snap & Search combines a native Rust capture engine with a lightweight modern desktop UI.
 
 ```text
 Ctrl + Shift + S
-       │
-       ▼
+        │
+        ▼
 Win32 Global Hotkey
-       │
-       ▼
+        │
+        ▼
 Native Selection Overlay
 (Rust + Win32 + GDI)
-       │
-       ▼
+        │
+        ▼
 Multi-Monitor Screen Capture
 (BitBlt → BGRA Buffer)
-       │
-       ▼
+        │
+        ▼
 Native Action Menu
-       │
- ┌─────┼─────────────┐
- ▼     ▼             ▼
-Lens  QR Scan   Save PNG
- │       │           │
- ▼       ▼           ▼
-Browser Clipboard   Disk
+        │
+   ┌────┼─────────────┐
+   ▼    ▼             ▼
+ Lens  QR Scan      Save PNG
+   │      │             │
+   ▼      ▼             ▼
+Browser Clipboard      Disk
 ```
 
-### Architecture
+## Architecture
 
-- **Rust + Win32/GDI** — Global hotkeys, layered windows, native menus, and screen capture.
-- **Native Capture Engine** — Converts selected screen regions into raw BGRA pixel buffers.
-- **Action Pipeline** — Handles Google Lens search, QR decoding, and PNG storage.
-- **Tauri + React** — Provides settings and screenshot history through a lightweight desktop dashboard.
-- **Event-Driven Service** — Remains idle until triggered by Windows events.
+* **Rust + Win32/GDI** — Global hotkeys, layered windows, native menus, and screen capture.
+* **Native Capture Engine** — Converts selected screen regions into raw BGRA pixel buffers.
+* **Action Pipeline** — Handles Google Lens search, QR decoding, and PNG storage.
+* **Tauri + React** — Provides settings and screenshot history through a lightweight desktop dashboard.
+* **Event-Driven Service** — Remains idle until triggered by Windows events.
 
 ---
 
-## 📦 Resource Usage
+# 📦 Resource Usage
 
-| Metric | Value |
-|---|---:|
-| Idle RAM | **~8 MB** |
-| Idle CPU | **~0%** |
+| Metric          |        Value |
+| --------------- | -----------: |
+| Idle RAM        |    **~8 MB** |
+| Idle CPU        |      **~0%** |
 | Executable Size | **~9.07 MB** |
 
 The application remains event-driven while idle and waits for Windows messages such as `WM_HOTKEY`.
 
 ---
 
-## 📥 Download
+# 📥 Download
 
-### Windows Installer
+## Windows Installer
 
 Recommended for most users:
 
 👉 <a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_0.1.0_x64_en-US.msi"><strong>📦 Download Snap & Search for Windows</strong></a>
 
-### Portable Version
+## Portable Version
 
 Run without installation:
 
 👉 <a href="https://github.com/prasanthkumarch26/Snap-and-Search/releases/latest/download/Snap_and_Search_0.1.0_x64-setup.exe"><strong>🏃 Download Portable .exe</strong></a>
 
-**System Requirements:**
+### System Requirements
 
-- Windows 10 or Windows 11
-- 64-bit system
+* Windows 10 or Windows 11
+* 64-bit system
 
 ---
 
-## 🛠️ Build From Source
+# 🛠️ Build From Source
 
-### Prerequisites
+## Prerequisites
 
-- [Rust](https://www.rust-lang.org/tools/install)
-- [Node.js](https://nodejs.org/en/)
+* [Rust](https://www.rust-lang.org/tools/install)
+* [Node.js](https://nodejs.org/en/)
 
 ```bash
 # Clone the repository
@@ -277,7 +283,7 @@ npm install
 npm run tauri dev
 ```
 
-### Build for Release
+## Build for Release
 
 ```bash
 npm run tauri build
@@ -285,43 +291,43 @@ npm run tauri build
 
 ---
 
-## 🛣️ Roadmap
+# 🛣️ Roadmap
 
-### ✅ Completed
+## ✅ Completed
 
-- [x] Native Win32 selection overlay
-- [x] Multi-monitor virtual screen support
-- [x] Google Lens visual search
-- [x] On-screen QR code decoding
-- [x] System tray application
-- [x] Local PNG screenshot saving
-- [x] Settings and History dashboard
+* [x] Native Win32 selection overlay
+* [x] Multi-monitor virtual screen support
+* [x] Google Lens visual search
+* [x] On-screen QR code decoding
+* [x] System tray application
+* [x] Local PNG screenshot saving
+* [x] Settings and History dashboard
 
-### 🔜 Planned
+## 🔜 Planned
 
-- [ ] ☁️ Cloud share links
-- [ ] 📌 Pin to Screen / Reference Mode
-- [ ] 🧠 Local AI Vision with Ollama
+* [ ] ☁️ Cloud share links
+* [ ] 📌 Pin to Screen / Reference Mode
+* [ ] 🧠 Local AI Vision with Ollama
 
 ---
 
-## 🤝 Contributing
+# 🤝 Contributing
 
 Contributions, ideas, and feedback are welcome!
 
 Feel free to:
 
-- 🐛 Report bugs
-- 💡 Suggest features
-- 🛠️ Open pull requests
-- ⭐ Star the repository if you find Snap & Search useful
+* 🐛 Report bugs
+* 💡 Suggest features
+* 🛠️ Open pull requests
+* ⭐ Star the repository if you find Snap & Search useful
 
 ---
 
 <div align="center">
 
-<h3>Snap anything. Search instantly.</h3>
+### Snap anything. Search instantly.
 
-<p>Made for Windows users who want to act on what's already on their screen.</p>
+Made for Windows users who want to act on what's already on their screen.
 
 </div>
