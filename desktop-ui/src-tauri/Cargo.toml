@@ -34,3 +34,5 @@ tauri-plugin-clipboard-manager = "2.0.0-rc.0"
 arboard = "3.6.1"
 webbrowser = "1.2.4"
 
+settings = { version = "0.1.0", path = "../../crates/settings" }
+tauri-plugin-dialog = "2.0.0"

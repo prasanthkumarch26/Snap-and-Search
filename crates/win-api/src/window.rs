@@ -13,6 +13,7 @@ pub enum OverlayAction {
     SearchLens,
     SaveScreenshot,
     ScanQrCode,
+    CopyToClipboard,
 }
 
 /// Coordinates of a completed screen selection, in virtual screen space.
@@ -123,6 +124,7 @@ impl OverlayWindow {
             let _ = AppendMenuW(menu, MF_STRING, 1, w!("🔍  Search with Google Lens"));
             let _ = AppendMenuW(menu, MF_STRING, 2, w!("💾  Save Screenshot as PNG"));
             let _ = AppendMenuW(menu, MF_STRING, 3, w!("🔗  Scan QR Code"));
+            let _ = AppendMenuW(menu, MF_STRING, 4, w!("📋  Copy to Clipboard"));
         }
 
         // TrackPopupMenu requires the parent window to be the foreground window.
@@ -150,6 +152,7 @@ impl OverlayWindow {
             1 => Some(OverlayAction::SearchLens),
             2 => Some(OverlayAction::SaveScreenshot),
             3 => Some(OverlayAction::ScanQrCode),
+            4 => Some(OverlayAction::CopyToClipboard),
             _ => None,
         }
     }

@@ -7,11 +7,12 @@ use tauri::menu::{Menu, MenuItem};
 use tauri::tray::TrayIconBuilder;
 
 fn run_background_service() {
-    println!("Starting Screen Intelligence Background Service in Tauri thread...");
+    println!("Starting Snap and Search Background Service in Tauri thread...");
 
-    let screenshots_dir = std::env::current_dir()
-        .unwrap_or_else(|_| PathBuf::from("."))
-        .join("screenshots");
+    let settings = settings::load_settings();
+    let screenshots_dir = PathBuf::from(&settings.save_dir);
+
+
 
     if let Err(e) = std::fs::create_dir_all(&screenshots_dir) {
         eprintln!("Warning: could not create screenshots dir: {}", e);
@@ -50,6 +51,22 @@ fn run_background_service() {
                                 }
                             }
                             Err(e) => eprintln!("PNG encoding failed: {}", e),
+                        }
+                    }
+                    OverlayAction::CopyToClipboard => {
+                        let rgba_img = frame.into_rgba_image();
+                        let (width, height) = rgba_img.dimensions();
+                        let img_data = arboard::ImageData {
+                            width: width as usize,
+                            height: height as usize,
+                            bytes: std::borrow::Cow::Borrowed(rgba_img.as_raw()),
+                        };
+                        if let Ok(mut clipboard) = arboard::Clipboard::new() {
+                            if let Err(e) = clipboard.set_image(img_data) {
+                                eprintln!("Failed to copy image to clipboard: {}", e);
+                            } else {
+                                println!("Image copied to clipboard!");
+                            }
                         }
                     }
                     OverlayAction::ScanQrCode => {
@@ -100,14 +117,34 @@ fn run_background_service() {
     println!("Overlay ready.");
 
     let hotkey_manager = HotkeyManager::new(1);
-    let modifiers = HotkeyModifiers { ctrl: true, shift: true, alt: false, win: false };
+    
+    let mut ctrl = false;
+    let mut shift = false;
+    let mut alt = false;
+    let mut vk = 0x53; // Default 'S'
 
-    if let Err(e) = hotkey_manager.register(modifiers, 0x53) {
+    let parts: Vec<&str> = settings.hotkey.split('+').collect();
+    for part in parts {
+        match part.to_uppercase().as_str() {
+            "CTRL" | "CONTROL" => ctrl = true,
+            "SHIFT" => shift = true,
+            "ALT" => alt = true,
+            key if key.len() == 1 => {
+                vk = key.chars().next().unwrap() as u32;
+            }
+            "SPACE" => vk = 0x20,
+            _ => {} // Ignore unknown
+        }
+    }
+
+    let modifiers = HotkeyModifiers { ctrl, shift, alt, win: false };
+
+    if let Err(e) = hotkey_manager.register(modifiers, vk) {
         eprintln!("Failed to register global hotkey: {}", e);
         return;
     }
 
-    println!("Global hotkey registered: Ctrl + Shift + S");
+    println!("Global hotkey registered: {}", settings.hotkey);
 
     hotkey_manager.listen(|| {
         println!("Hotkey pressed — showing overlay...");
@@ -131,9 +168,8 @@ fn next_screenshot_path(dir: &std::path::Path) -> PathBuf {
 #[tauri::command]
 fn get_screenshots() -> Vec<String> {
     let mut screenshots = Vec::new();
-    let screenshots_dir = std::env::current_dir()
-        .unwrap_or_else(|_| PathBuf::from("."))
-        .join("screenshots");
+    let settings = settings::load_settings();
+    let screenshots_dir = PathBuf::from(settings.save_dir);
 
     if let Ok(entries) = std::fs::read_dir(&screenshots_dir) {
         for entry in entries.flatten() {
@@ -161,9 +197,8 @@ fn get_screenshots() -> Vec<String> {
 fn get_screenshot_base64(name: String) -> Result<String, String> {
     use base64::{engine::general_purpose::STANDARD, Engine as _};
     
-    let screenshots_dir = std::env::current_dir()
-        .unwrap_or_else(|_| PathBuf::from("."))
-        .join("screenshots");
+    let settings = settings::load_settings();
+    let screenshots_dir = PathBuf::from(settings.save_dir);
     let path = screenshots_dir.join(&name);
     
     // Basic security check: ensure it's actually in the screenshots dir
@@ -180,15 +215,16 @@ fn get_screenshot_base64(name: String) -> Result<String, String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![get_screenshots, get_screenshot_base64])
+        .invoke_handler(tauri::generate_handler![get_screenshots, get_screenshot_base64, get_settings, save_settings])
         .setup(|app| {
             // Spawn the native capture/overlay background thread
             std::thread::spawn(run_background_service);
 
             // Create tray menu
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let show_i = MenuItem::with_id(app, "show", "Show History & Settings", true, None::<&str>)?;
+            let show_i = MenuItem::with_id(app, "show", "Show Settings", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
             let _tray = TrayIconBuilder::new()
@@ -226,3 +262,16 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running Tauri application");
 }
+#[tauri::command]
+fn get_settings() -> settings::AppSettings {
+    settings::load_settings()
+}
+
+#[tauri::command]
+fn save_settings(new_settings: settings::AppSettings) -> Result<(), String> {
+    settings::save_settings(&new_settings);
+    // Restarting the background service to bind new hotkey is left as an exercise 
+    // for this MVP, we just save it.
+    Ok(())
+}
+

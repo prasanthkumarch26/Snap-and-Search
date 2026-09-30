@@ -48,7 +48,7 @@ Ctrl + Shift + S
         ↓
 Select anything on your screen
         ↓
-🔍 Search   🔗 Scan QR   💾 Save
+🔍 Search   🔗 Scan QR   💾 Save   📋 Copy
 ```
 
 ---
@@ -82,19 +82,22 @@ Select a QR code visible anywhere on your screen and Snap & Search decodes it di
 
 ---
 
-## 💾 Save Screenshots Instantly
+## 💾 Save & Copy Instantly
 
-Capture any region and save it as a lossless PNG.
+Capture any region and immediately take action:
 
-Your screenshots stay local and can be accessed through the History dashboard.
+* 📋 **Copy to Clipboard** — Instantly paste the raw image into Slack, Discord, or Docs.
+* 💾 **Save to Disk** — Save as a lossless PNG to a configurable directory of your choice.
+
+Your local screenshots can be accessed directly through the History dashboard.
 
 ---
 
-## 🖥️ Works Across Multiple Monitors
+## 🖥️ Pixel-Perfect Multi-Monitor Support
 
-Snap & Search supports the full Windows virtual desktop.
+Snap & Search supports complex virtual desktops with native **DPI Awareness**.
 
-Select content across multiple monitors, including displays with negative coordinates.
+Whether you have a 4K monitor at 150% scaling or a 1080p monitor at 100%, the selection crosshairs remain mathematically perfect across all boundaries, including displays with negative coordinates.
 
 ---
 
@@ -124,15 +127,15 @@ Snap & Search stays quietly in your system tray until you need it.
 
 ---
 
-## 📊 Settings & History Dashboard
+## 📊 Fluent UI Settings & History Dashboard
 
-A lightweight dashboard built with **Tauri + React + TypeScript** provides:
+A lightweight, modern dashboard built with **Tauri + React + TypeScript** provides:
 
-* Screenshot history
-* Settings management
-* Application configuration
+* **Dynamic Keyboard Hooks:** Record your own custom global shortcut (e.g. `Ctrl+Alt+S`) directly in the UI.
+* **Native File Dialogs:** Easily select where your local captures should be organized.
+* **Screenshot History:** Review your recent saved captures natively.
 
-The screen capture and selection pipeline remains native and independent from the UI layer.
+The screen capture and selection pipeline remains pure Win32 and entirely independent from the UI layer, guaranteeing zero webview overhead during captures.
 
 ---
 
@@ -296,12 +299,13 @@ npm run tauri build
 ## ✅ Completed
 
 * [x] Native Win32 selection overlay
-* [x] Multi-monitor virtual screen support
+* [x] Multi-monitor virtual screen support with native DPI awareness
 * [x] Google Lens visual search
 * [x] On-screen QR code decoding
+* [x] Copy instantly to Windows Clipboard
 * [x] System tray application
-* [x] Local PNG screenshot saving
-* [x] Settings and History dashboard
+* [x] Local PNG screenshot saving with Native Folder dialogs
+* [x] Settings dashboard with Dynamic Hotkey binding
 
 ## 🔜 Planned
 

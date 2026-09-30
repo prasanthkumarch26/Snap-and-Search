@@ -2,5 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
+    win_api::init_dpi_awareness();
     app_lib::run()
 }

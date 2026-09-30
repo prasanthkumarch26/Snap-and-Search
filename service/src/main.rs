@@ -6,10 +6,12 @@ use win_api::hotkey::{HotkeyManager, HotkeyModifiers};
 fn main() {
     println!("Starting Screen Intelligence Background Service...");
 
-    // Ensure the screenshots folder exists next to wherever we're run from
-    let screenshots_dir = std::env::current_dir()
+    let screenshots_dir = std::env::var("USERPROFILE")
+        .map(PathBuf::from)
         .unwrap_or_else(|_| PathBuf::from("."))
-        .join("screenshots");
+        .join("OneDrive")
+        .join("Pictures")
+        .join("Screen Captures")
 
     if let Err(e) = std::fs::create_dir_all(&screenshots_dir) {
         eprintln!("Warning: could not create screenshots dir: {}", e);

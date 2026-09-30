@@ -1,88 +1,149 @@
-"use client"
-
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { open } from "@tauri-apps/plugin-dialog";
 import "./App.css";
 
-interface Screenshot {
-  name: string;
-  data: string;
+interface AppSettings {
+  hotkey: string;
+  save_dir: string;
 }
 
 function App() {
-  const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<AppSettings | null>(null);
+  const [screenshots, setScreenshots] = useState<string[]>([]);
+  const [status, setStatus] = useState("");
+  const [recordingHotkey, setRecordingHotkey] = useState(false);
 
   useEffect(() => {
-    loadScreenshots();
+    invoke<AppSettings>("get_settings")
+      .then((s) => setSettings(s))
+      .catch(console.error);
+      
+    invoke<string[]>("get_screenshots")
+      .then((s) => setScreenshots(s))
+      .catch(console.error);
   }, []);
 
-  const loadScreenshots = async () => {
-    try {
-      setLoading(true);
-      const names: string[] = await invoke("get_screenshots");
-      
-      const loaded: Screenshot[] = [];
-      for (const name of names) {
-        try {
-          const base64Data: string = await invoke("get_screenshot_base64", { name });
-          loaded.push({ name, data: `data:image/png;base64,${base64Data}` });
-        } catch (e) {
-          console.error(`Failed to load ${name}`, e);
-        }
+  const handleSave = async () => {
+    if (settings) {
+      try {
+        await invoke("save_settings", { newSettings: settings });
+        setStatus("Settings saved! (Restart app to apply hotkey changes)");
+        setTimeout(() => setStatus(""), 4000);
+      } catch (err) {
+        setStatus(`Error saving settings: ${err}`);
       }
-      
-      setScreenshots(loaded);
-    } catch (error) {
-      console.error("Failed to load screenshots:", error);
-    } finally {
-      setLoading(false);
     }
+  };
+
+  const selectFolder = async () => {
+    if (!settings) return;
+    try {
+      const selected = await open({
+        directory: true,
+        multiple: false,
+        title: "Select where to save screenshots"
+      });
+      if (selected && typeof selected === "string") {
+        let finalPath = selected;
+        // If they didn't explicitly pick a folder named 'Screen Captures', append it
+        if (!finalPath.endsWith("Screen Captures")) {
+          finalPath = finalPath.replace(/\\$/, "") + "\\Screen Captures";
+        }
+        setSettings({ ...settings, save_dir: finalPath });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!recordingHotkey) return;
+    e.preventDefault();
+    
+    // Ignore lone modifier keys
+    if (["Control", "Shift", "Alt", "Meta"].includes(e.key)) {
+      return;
+    }
+    
+    let parts = [];
+    if (e.ctrlKey) parts.push("Ctrl");
+    if (e.shiftKey) parts.push("Shift");
+    if (e.altKey) parts.push("Alt");
+    
+    let key = e.key.toUpperCase();
+    if (key === " ") key = "SPACE";
+    
+    parts.push(key);
+    
+    setSettings(prev => prev ? { ...prev, hotkey: parts.join("+") } : null);
+    setRecordingHotkey(false);
   };
 
   return (
     <main className="container">
-      <header>
+      <header className="hero">
+        <img src="/placeholder.png" alt="Logo" className="logo" />
         <h1>Snap & Search</h1>
-        <p>Your screen intelligence history and settings</p>
+        <p>Configure your intelligent screen capture toolkit.</p>
       </header>
       
-      <section className="settings-panel">
-        <h2>Settings</h2>
-        <div className="setting-item">
-          <label>Global Hotkey:</label>
-          <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
-        </div>
-        <p className="setting-note">
-          Keep this app running in the background. It hides to the system tray when closed.
-        </p>
-      </section>
+      {settings && (
+        <section className="card settings-panel">
+          <h2>Preferences</h2>
+          
+          <div className="setting-group">
+            <label>Screenshots Save Directory</label>
+            <div className="input-with-button">
+              <input 
+                type="text" 
+                value={settings.save_dir} 
+                onChange={(e) => setSettings({...settings, save_dir: e.target.value})} 
+              />
+              <button onClick={selectFolder} className="secondary-btn">Browse...</button>
+            </div>
+            <small>New snips will automatically be placed in a "Screen Captures" folder here.</small>
+          </div>
+          
+          <div className="setting-group">
+            <label>Global Activation Hotkey</label>
+            <div className="input-with-button">
+              <input 
+                type="text" 
+                value={recordingHotkey ? "Listening..." : settings.hotkey} 
+                onFocus={() => setRecordingHotkey(true)}
+                onBlur={() => setRecordingHotkey(false)}
+                onKeyDown={handleKeyDown}
+                className={recordingHotkey ? "recording" : ""}
+                readOnly
+              />
+            </div>
+            <small>Click to record a new shortcut (e.g. Ctrl+Shift+X).</small>
+          </div>
 
-      <section className="history-panel">
-        <div className="history-header">
-          <h2>Capture History</h2>
-          <button onClick={loadScreenshots} className="refresh-btn">
-            ↻ Refresh
-          </button>
+          <div className="actions">
+            <button onClick={handleSave} className="primary-btn">Save Changes</button>
+            {status && <span className="status-msg">{status}</span>}
+          </div>
+        </section>
+      )}
+
+      <section className="card history-panel">
+        <h2>Recent Captures ({screenshots.length})</h2>
+        <div className="gallery">
+          {screenshots.length === 0 ? (
+             <div className="empty-state">No snaps yet. Try pressing your hotkey!</div>
+          ) : null}
+          {screenshots.slice(0, 5).map((name) => (
+             <div key={name} className="gallery-item">
+               <span className="file-icon">🖼️</span>
+               <span>{name}</span>
+             </div>
+          ))}
+          {screenshots.length > 5 && (
+            <div className="gallery-item more-item">...and {screenshots.length - 5} more</div>
+          )}
         </div>
-        
-        {loading ? (
-          <p className="loading">Loading your history...</p>
-        ) : screenshots.length === 0 ? (
-          <div className="empty-state">
-            <p>No screenshots saved yet.</p>
-            <p>Use the hotkey and choose "Save Screenshot" to see them here.</p>
-          </div>
-        ) : (
-          <div className="gallery">
-            {screenshots.map((s) => (
-              <div key={s.name} className="gallery-item">
-                <img src={s.data} alt={s.name} loading="lazy" />
-                <div className="item-name">{s.name}</div>
-              </div>
-            ))}
-          </div>
-        )}
       </section>
     </main>
   );
