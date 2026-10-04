@@ -1,5 +1,7 @@
 [workspace]
 resolver = "2"
-members = ["crates/capture", "crates/common", "crates/dispatcher", "crates/history", "crates/image-processing","crates/overlay", "crates/settings", "crates/win-api",
-    "desktop-ui/src-tauri"
-, "plugins/ai", "plugins/google-lens", "plugins/ocr", "plugins/qr", "plugins/translator", "service"]
+members = [
+    "crates/capture", "crates/overlay", "crates/settings", "crates/win-api",
+    "desktop-ui/src-tauri",
+    "plugins/google-lens"
+]

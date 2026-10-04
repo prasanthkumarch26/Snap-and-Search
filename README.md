@@ -238,7 +238,7 @@ Browser Clipboard      Disk
 | --------------- | -----------: |
 | Idle RAM        |    **~8 MB** |
 | Idle CPU        |      **~0%** |
-| Executable Size | **~9.07 MB** |
+| Executable Size | **~14.3 MB** |
 
 The application remains event-driven while idle and waits for Windows messages such as `WM_HOTKEY`.
 

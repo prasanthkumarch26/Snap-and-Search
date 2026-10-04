@@ -44,7 +44,14 @@ fn run_background_service() {
                     OverlayAction::SaveScreenshot => {
                         match frame.to_png_bytes() {
                             Ok(png) => {
-                                let path = next_screenshot_path(&screenshots_dir);
+                                // Load fresh settings so we get the newly updated path without restarting
+                                let current_settings = settings::load_settings();
+                                let current_dir = PathBuf::from(current_settings.save_dir);
+                                
+                                // Ensure the folder exists just in case they deleted it or just changed it
+                                let _ = std::fs::create_dir_all(&current_dir);
+                                
+                                let path = next_screenshot_path(&current_dir);
                                 match std::fs::write(&path, &png) {
                                     Ok(_) => println!("Screenshot saved: {}", path.display()),
                                     Err(e) => eprintln!("Failed to save screenshot: {}", e),

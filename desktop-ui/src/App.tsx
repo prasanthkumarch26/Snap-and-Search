@@ -85,7 +85,7 @@ function App() {
       <header className="hero">
         <img src="/placeholder.png" alt="Logo" className="logo" />
         <h1>Snap & Search</h1>
-        <p>Configure your intelligent screen capture toolkit.</p>
+        <p>Configure your Preferences.</p>
       </header>
       
       {settings && (
