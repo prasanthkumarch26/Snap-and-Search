@@ -83,7 +83,7 @@ function App() {
   return (
     <main className="container">
       <header className="hero">
-        <img src="/placeholder.png" alt="Logo" className="logo" />
+        <img src="/search.png" alt="Logo" className="logo" />
         <h1>Snap & Search</h1>
         <p>Configure your Preferences.</p>
       </header>
