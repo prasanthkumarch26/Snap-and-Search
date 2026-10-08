@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/placeholder.png" alt="Snap & Search Logo" width="128" />
+<img src="assets/search.png" alt="Snap & Search Logo" width="128" />
 
 <h1>Snap & Search</h1>
 
