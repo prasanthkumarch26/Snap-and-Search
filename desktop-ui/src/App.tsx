@@ -80,6 +80,16 @@ function App() {
     setRecordingHotkey(false);
   };
 
+  const handleDiscard = () => {
+    invoke<AppSettings>("get_settings")
+      .then((s) => {
+        setSettings(s);
+        setStatus("Changes discarded.");
+        setTimeout(() => setStatus(""), 4000);
+      })
+      .catch(console.error);
+  };
+
   return (
     <main className="container">
       <header className="hero">
@@ -121,8 +131,9 @@ function App() {
             <small>Click to record a new shortcut (e.g. Ctrl+Shift+X).</small>
           </div>
 
-          <div className="actions">
+          <div className="actions" style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             <button onClick={handleSave} className="primary-btn">Save Changes</button>
+            <button onClick={handleDiscard} className="secondary-btn">Discard Changes</button>
             {status && <span className="status-msg">{status}</span>}
           </div>
         </section>
